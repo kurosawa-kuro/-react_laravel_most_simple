@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +17,11 @@ use App\Http\Controllers\TaskController;
 |
 */
 
-Route::apiResource('tasks',TaskController::class);
-// Route::apiResource('/books', BookController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::apiResource('tasks',TaskController::class);
+//Route::apiResource('files',FileController::class);
+Route::get('files', [FileController::class, 'index'])->name('file.upload');
+Route::post('file-upload', [FileController::class, 'store'])->name('file.upload.store');

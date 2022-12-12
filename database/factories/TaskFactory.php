@@ -15,7 +15,8 @@ class TaskFactory extends Factory
     {
         return [
             'title'=> $this->faker->realText(rand(15,40)),
-            'is_done'=> $this->faker->boolean(10),
+            'image'=> $this->faker->imageUrl(360, 360, 'animals', true, 'cats'),
+            'original_image'=> $this->faker->imageUrl(360, 360, 'animals', true, 'cats'),
             'created_at'=> now(),
             'updated_at'=> now(),
         ];

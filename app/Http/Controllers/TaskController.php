@@ -28,7 +28,18 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->all());
+
+
+        $fileName = time().'.'.$request->image->extension();
+        $request->image->move(public_path('uploads'), $fileName);
+//        dd($request->image->getClientOriginalName());
+
+        $task = Task::create([
+            'title' => $request->title,
+            'image' => $fileName,
+            'original_image' => $request->image->getClientOriginalName(),
+        ]);
+
 
         return $task ? response()->Json($task,201):response()->Json([],500);
     }

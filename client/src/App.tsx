@@ -7,7 +7,8 @@ const url = "http://localhost:8000"
 type task = {
   id: number;
   title: string;
-  is_done: boolean;
+  image: File | null;
+  original_image: string;
   created_at: string;
   updated_at: string;
 };
@@ -17,7 +18,8 @@ function App() {
     {
       id: 0,
       title: "",
-      is_done: false,
+      image: null,
+      original_image: "",
       created_at: "",
       updated_at: "",
     }
@@ -37,10 +39,25 @@ function App() {
     setTitle(e.target.value);
   };
 
+  const [image, setImage] = useState<File>()
+  const getImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return
+    const img: File = e.target.files[0]
+    console.log({ img })
+    setImage(img)
+    console.log({ image })
+  }
+
   const createTask = async (): Promise<void> => {
-    const response = await axios.post(`${url}/api/tasks/`, {
-      title,
-    })
+    console.log("createTask param")
+    const submitData = new FormData()
+
+    submitData.append("title", title)
+    submitData.append("image", image as File)
+
+    console.log(submitData)
+    console.log("createTask param")
+    const response = await axios.post(`${url}/api/tasks/`, submitData)
 
     setTasks([response.data, ...tasks]);
     setTitle("");
@@ -52,16 +69,25 @@ function App() {
         タイトル:
         <input value={title} onChange={handleTitleChange} />
       </label>
+      <div>
+        <label>File</label>
+        <input
+          type="file"
+
+          //   label="File"
+          name="image"
+          onChange={getImage}
+        />
+      </div>
       <button onClick={createTask}>作成</button>
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>
-            タイトル:{task.title}
-          </li>
+          <li key={task.id} > <div style={{ width: 600, height: 50 }}> <img src="https://via.placeholder.com/360x360.png/00bb00?text=animals+cats+eligendi" width="30" height="30" alt="サンプル画像" /> タイトル : {task.title} </div></li>
         ))}
       </ul>
     </div>
   );
+
 }
 
 export default App;
